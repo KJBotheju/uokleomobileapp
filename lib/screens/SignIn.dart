@@ -1,9 +1,10 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_final_fields, unused_local_variable, use_build_context_synchronously, prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:uokleo/HomePage.dart';
 import 'package:uokleo/resuable_widgets/reusable_widgets.dart';
-import 'package:uokleo/screens/Signup.dart';
+import 'Signup.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -15,6 +16,40 @@ class SignInPage extends StatefulWidget {
 class SingInPageState extends State<SignInPage> {
   TextEditingController _passwordTextController = TextEditingController();
   TextEditingController _emailTextController = TextEditingController();
+
+  Future<void> _signIn(BuildContext context) async {
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailTextController.text,
+        password: _passwordTextController.text,
+      );
+
+      // Successful login, navigate to the home page
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        _showErrorSnackBar(context, 'Email is incorrect.');
+      } else if (e.code == 'wrong-password') {
+        _showErrorSnackBar(context, 'Password is incorrect.');
+      }
+    } catch (e) {
+      _showErrorSnackBar(context, 'An unexpected error occurred.');
+    }
+  }
+
+  void _showErrorSnackBar(BuildContext context, String errorMessage) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(errorMessage),
+        duration: Duration(seconds: 3),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,8 +85,8 @@ class SingInPageState extends State<SignInPage> {
                 SizedBox(
                   height: 20,
                 ),
-                SignInSignUpButton(context, true, () {}),
-                SignUpOption()
+                SignInSignUpButton(context, true, () => _signIn(context)),
+                SignUpOption(),
               ],
             ),
           ),
@@ -84,4 +119,3 @@ class SingInPageState extends State<SignInPage> {
     );
   }
 }
-//
