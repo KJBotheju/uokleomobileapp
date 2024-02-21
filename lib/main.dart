@@ -1,9 +1,15 @@
 // ignore_for_file: unnecessary_new
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:uokleo/firebase_options.dart';
 import './screens/SplashScreen.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
