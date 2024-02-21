@@ -44,7 +44,7 @@ class SignUpPageState extends State<SignUpPage> {
               children: <Widget>[
                 logoWidget("assets/images/download.jpeg"),
                 Text(
-                  "LEO CLUB OF UNIVERSITY KELANIYA",
+                  "LEO CLUB OF UNIVERSITY OF KELANIYA",
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 25,

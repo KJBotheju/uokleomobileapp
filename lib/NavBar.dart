@@ -1,6 +1,7 @@
-// ignore_for_file: file_names, use_key_in_widget_constructors, library_private_types_in_public_api
+// ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:uokleo/screens/SignIn.dart';
 import './screens/EventPage.dart';
 import './screens/BlogPage.dart';
 import './screens/Projects.dart';
@@ -26,14 +27,22 @@ class _NavBarState extends State<NavBar> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
+          if (index == 3) {
+            // Logout action
+            // Here, you can add your logout logic, such as signing out from Firebase or clearing user data
+            // Then, navigate to the login page
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => SignInPage()),
+            );
+          } else {
+            setState(() {
+              _currentIndex = index;
+            });
+          }
         },
-        backgroundColor:
-            Color.fromARGB(255, 248, 224, 3), // Set background color to yellow
-        selectedItemColor:
-            Color.fromARGB(255, 10, 0, 0), // Set selected item color to white
+        backgroundColor: Color.fromARGB(255, 248, 224, 3),
+        selectedItemColor: Color.fromARGB(255, 10, 0, 0),
         unselectedItemColor: Color.fromARGB(255, 11, 0, 0),
         items: [
           BottomNavigationBarItem(
@@ -47,6 +56,10 @@ class _NavBarState extends State<NavBar> {
           BottomNavigationBarItem(
             icon: buildIconWithBox(Icons.calendar_today, 2),
             label: 'Upcoming',
+          ),
+          BottomNavigationBarItem(
+            icon: buildIconWithBox(Icons.logout, 3),
+            label: 'Logout',
           ),
         ],
       ),

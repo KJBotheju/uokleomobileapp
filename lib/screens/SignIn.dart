@@ -64,7 +64,7 @@ class SingInPageState extends State<SignInPage> {
               children: <Widget>[
                 logoWidget("assets/images/download.jpeg"),
                 Text(
-                  "LEO CLUB OF UNIVERSITY KELANIYA",
+                  "LEO CLUB OF UNIVERSITY OF KELANIYA",
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 25,
