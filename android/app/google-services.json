@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "426682899373",
+    "project_id": "uokleo",
+    "storage_bucket": "uokleo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:426682899373:android:173c4eb65a25ca893edf24",
+        "android_client_info": {
+          "package_name": "com.example.uokleo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkQNDZC-1ddkMAj_5CW4583LOcSZgS8Vw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
