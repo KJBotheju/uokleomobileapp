@@ -1,7 +1,6 @@
-// ignore_for_file: prefer_final_fields, prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 import 'package:uokleo/HomePage.dart';
 import 'package:uokleo/resuable_widgets/reusable_widgets.dart';
 
@@ -20,6 +19,8 @@ class SignUpPageState extends State<SignUpPage> {
       TextEditingController();
 
   FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseFirestore _firestore =
+      FirebaseFirestore.instance; // Initialize Firestore
 
   @override
   Widget build(BuildContext context) {
@@ -104,10 +105,22 @@ class SignUpPageState extends State<SignUpPage> {
 
                   try {
                     // Create a new user with email and password
-                    await _auth.createUserWithEmailAndPassword(
+                    UserCredential userCredential =
+                        await _auth.createUserWithEmailAndPassword(
                       email: _emailTextController.text,
                       password: _passwordTextController.text,
                     );
+
+                    // Save user data to Firestore
+                    await _firestore
+                        .collection('Users')
+                        .doc(userCredential.user!.uid)
+                        .set({
+                      'username': _userNameTextController.text,
+                      'email': _emailTextController.text,
+                      'password': _passwordTextController.text,
+                      // Add more fields as needed
+                    });
 
                     // If successful, navigate to the homepage
                     Navigator.pushReplacement(

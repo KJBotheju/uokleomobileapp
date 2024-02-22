@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uokleo/HomePage.dart';
+import 'package:uokleo/adminScreen/addblog.dart';
 
 class AdminContect extends StatefulWidget {
   const AdminContect({Key? key});
@@ -17,7 +18,8 @@ class _AdminContectState extends State<AdminContect> {
   }
 
   void _addBlogs() {
-    // Implement logic for adding blogs
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => AddBlog()));
     print('Add Blogs clicked');
   }
 
