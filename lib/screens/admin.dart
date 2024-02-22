@@ -71,7 +71,8 @@ class _AdminPageState extends State<AdminPage> {
               ElevatedButton(
                 onPressed: _login,
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 223, 220, 23)),
+                  backgroundColor: Color.fromARGB(255, 247, 223, 2),
+                ),
                 child: Text(
                   'Login',
                   style: TextStyle(color: Colors.black),

@@ -16,7 +16,7 @@ class _BlogPageState extends State<BlogPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
-            height: 180.0,
+            height: 140.0,
             decoration: BoxDecoration(
               color: const Color.fromARGB(255, 247, 223, 2),
               borderRadius: BorderRadius.only(
@@ -44,8 +44,8 @@ class _BlogPageState extends State<BlogPage> {
                   ),
                 ),
                 Positioned(
-                  right: 20.0,
-                  top: 55.0,
+                  right: 5.0,
+                  top: 60.0,
                   child: Container(
                     constraints: BoxConstraints(maxWidth: 250.0),
                     child: Text(
@@ -85,6 +85,10 @@ class YourBlogContentWidget extends StatelessWidget {
         }
 
         List<DocumentSnapshot> blogs = snapshot.data?.docs ?? [];
+
+        if (blogs.isEmpty) {
+          return Center(child: Text('No blogs added yet.'));
+        }
 
         return ListView.builder(
           itemCount: blogs.length,
