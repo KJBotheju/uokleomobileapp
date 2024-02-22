@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:uokleo/HomePage.dart';
 import 'package:uokleo/adminScreen/addblog.dart';
@@ -15,6 +16,8 @@ class AdminContect extends StatefulWidget {
 
 class _AdminContectState extends State<AdminContect> {
   TextEditingController projectNameController = TextEditingController();
+  String? selectedCaption; // Define selectedCaption
+  Set<QueryDocumentSnapshot> selectedProjects = {}; // Define selectedProjects
 
   void _goBack() {
     Navigator.pushReplacement(
@@ -118,8 +121,107 @@ class _AdminContectState extends State<AdminContect> {
   }
 
   void _deleteProjects() {
-    // Implement logic for deleting projects
-    print('Delete Projects clicked');
+    ScaffoldMessenger.of(context)
+        .hideCurrentSnackBar(); // Hide any existing snackbar
+
+    TextEditingController captionController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Projects'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Enter caption to delete:'),
+                TextField(
+                  controller: captionController,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    String enteredCaption = captionController.text.trim();
+
+                    if (enteredCaption.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Please enter a caption to delete.'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+
+                    var querySnapshot = await FirebaseFirestore.instance
+                        .collection('Projects')
+                        .where('caption', isEqualTo: enteredCaption)
+                        .get();
+
+                    if (querySnapshot.docs.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              'No project found with the entered caption.'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+
+                    for (var doc in querySnapshot.docs) {
+                      // Check if 'image_urls' field exists in the document
+                      if (doc.data()!.containsKey('image_urls')) {
+                        var imageUrls = List<String>.from(doc['image_urls']);
+                        for (var imageUrl in imageUrls) {
+                          try {
+                            await FirebaseStorage.instance
+                                .refFromURL(imageUrl)
+                                .delete();
+                          } catch (e) {
+                            print('Error deleting image from storage: $e');
+                          }
+                        }
+                      }
+
+                      try {
+                        await doc.reference.delete();
+                      } catch (e) {
+                        print('Error deleting project document: $e');
+                      }
+                    }
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Projects deleted successfully.'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+
+                    Navigator.of(context).pop(); // Close the delete dialog
+                  },
+                  child: Text('Delete'),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _deleteProjectDate() {

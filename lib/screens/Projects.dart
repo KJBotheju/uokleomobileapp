@@ -162,7 +162,6 @@ class _LearnMoreCaptionState extends State<LearnMoreCaption> {
           truncatedCaption,
           style: TextStyle(
             fontSize: 16,
-            fontWeight: FontWeight.bold,
           ),
         ),
         // "See More" button for resetting
@@ -175,13 +174,15 @@ class _LearnMoreCaptionState extends State<LearnMoreCaption> {
                 showFullCaption = false;
               });
             },
-            style: ButtonStyle(
+            /*style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all<Color>(
                   Color.fromARGB(255, 23, 187, 29)), // Set background color
-            ),
+            ),*/
             child: Text(
               'See Less',
-              style: TextStyle(color: Colors.white), // Set text color
+              style: TextStyle(
+                color: Color.fromARGB(255, 0, 207, 7),
+              ), // Set text color
             ),
           ),
         // "Learn More" button
@@ -192,17 +193,17 @@ class _LearnMoreCaptionState extends State<LearnMoreCaption> {
                 showFullCaption = true;
               });
             },
-            style: ElevatedButton.styleFrom(
+            /*style: ElevatedButton.styleFrom(
               backgroundColor:
                   Color.fromARGB(255, 23, 187, 29), // Set background color
               minimumSize:
                   Size(50, 40), // Set your desired width and height here
-            ),
+            ),*/
             child: Text(
               'See More',
               style: TextStyle(
                 fontSize: 15,
-                color: Colors.white,
+                color: const Color.fromARGB(255, 0, 207, 7),
               ), // Set text style
             ),
           ),
