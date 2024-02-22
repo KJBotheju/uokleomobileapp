@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BlogPage extends StatefulWidget {
   const BlogPage({super.key});
@@ -70,23 +71,33 @@ class _BlogPageState extends State<BlogPage> {
 }
 
 class YourBlogContentWidget extends StatelessWidget {
-  final List<String> dummyBlogs = [
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-    "Contrary to popular belief, Lorem Ipsum is not simply random text.",
-    "It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.",
-    "Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words.",
-    "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words.",
-    "If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text.",
-  ];
-
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: dummyBlogs.length,
-      itemBuilder: (context, index) {
-        // Adding dummy images and captions to each blog
-        return BlogItemWidget(
-            dummyBlogs[index], 'assets/images/blog_image_$index.jpg');
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('Blogs').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        List<DocumentSnapshot> blogs = snapshot.data?.docs ?? [];
+
+        return ListView.builder(
+          itemCount: blogs.length,
+          itemBuilder: (context, index) {
+            // Extracting data from Firestore
+            var blogData = blogs[index].data() as Map<String, dynamic>;
+            String blogTitle = blogData['title'] ?? '';
+            String blogText = blogData['long_caption'] ?? '';
+            String imagePath = blogData['image_url'] ?? '';
+
+            return BlogItemWidget(blogText, imagePath, blogTitle);
+          },
+        );
       },
     );
   }
@@ -95,8 +106,9 @@ class YourBlogContentWidget extends StatelessWidget {
 class BlogItemWidget extends StatelessWidget {
   final String blogText;
   final String imagePath;
+  final String blogTitle;
 
-  BlogItemWidget(this.blogText, this.imagePath);
+  BlogItemWidget(this.blogText, this.imagePath, this.blogTitle);
 
   @override
   Widget build(BuildContext context) {
@@ -106,11 +118,13 @@ class BlogItemWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Image.asset(
+            Image.network(
               imagePath,
               height: 150.0,
               fit: BoxFit.cover,
             ),
+            Padding(
+                padding: const EdgeInsets.all(16.0), child: Text(blogTitle)),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(blogText),
