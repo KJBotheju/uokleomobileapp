@@ -35,7 +35,7 @@ class _BlogPageState extends State<BlogPage> {
                   child: Container(
                     height: 20.0,
                     decoration: BoxDecoration(
-                      color: Colors.yellow,
+                      color: Color.fromARGB(255, 247, 223, 2),
                     ),
                   ),
                 ),

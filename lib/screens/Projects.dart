@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProjectPage extends StatefulWidget {
   const ProjectPage({Key? key}) : super(key: key);
@@ -12,21 +12,24 @@ class ProjectPageState extends State<ProjectPage> {
   Future<QuerySnapshot> _getProjects() async {
     return await FirebaseFirestore.instance
         .collection('Projects')
-        .orderBy('timestamp',
-            descending: true) // Order by timestamp in descending order
+        .orderBy('timestamp', descending: true)
         .get();
   }
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
-            height: 180.0,
+            height:
+                screenWidth * 0.33, // Adjusted height based on screen height
             decoration: BoxDecoration(
-              color: Colors.yellow,
+              color: Color.fromARGB(255, 247, 223, 2),
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20.0),
                 bottomRight: Radius.circular(20.0),
@@ -37,30 +40,37 @@ class ProjectPageState extends State<ProjectPage> {
                 ClipPath(
                   clipper: ArcClipper(),
                   child: Container(
-                    height: 20.0,
+                    height: screenHeight *
+                        0.02, // Adjusted height based on screen height
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 244, 219, 3),
+                      color: const Color.fromARGB(255, 247, 223, 2),
                     ),
                   ),
                 ),
                 Positioned(
-                  left: 22.0,
-                  top: 50.0,
+                  left: 0.05 * screenWidth,
+                  top: 0.1 *
+                      screenWidth, // Adjusted position based on screen height
                   child: CircleAvatar(
                     backgroundImage: AssetImage('assets/images/download.jpeg'),
-                    radius: 38.0,
+                    radius: screenWidth *
+                        0.1, // Adjusted radius based on screen width
                   ),
                 ),
                 Positioned(
-                  right: 20.0,
-                  top: 55.0,
+                  right: 0.2 * screenWidth,
+                  top: 0.15 *
+                      screenWidth, // Adjusted position based on screen height
                   child: Container(
-                    constraints: BoxConstraints(maxWidth: 250.0),
+                    constraints: BoxConstraints(
+                        maxWidth: screenWidth *
+                            0.4), // Adjusted maxWidth based on screen width
                     child: Text(
-                      'projects',
+                      'Projects of Leo Club Of UOK',
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 20.0,
+                        fontSize: screenWidth *
+                            0.04, // Adjusted fontSize based on screen width
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -113,24 +123,97 @@ class YourBlogContentWidget extends StatelessWidget {
               // Full-width image
               Image.network(
                 project['image_url'] ?? '',
-                height: 200, // Adjust the height as needed
+                height: 200,
                 fit: BoxFit.cover,
               ),
               SizedBox(height: 8),
-              // Caption
-              Text(
-                project['caption'] ?? '',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Divider(), // Optional: Add a divider between entries
+              // Caption with "Learn More" functionality
+              LearnMoreCaption(project['caption'] ?? ''),
+              Divider(),
             ],
           ),
         );
       },
     );
+  }
+}
+
+class LearnMoreCaption extends StatefulWidget {
+  final String caption;
+
+  LearnMoreCaption(this.caption);
+
+  @override
+  _LearnMoreCaptionState createState() => _LearnMoreCaptionState();
+}
+
+class _LearnMoreCaptionState extends State<LearnMoreCaption> {
+  bool showFullCaption = false;
+
+  @override
+  Widget build(BuildContext context) {
+    String truncatedCaption =
+        showFullCaption ? widget.caption : _truncateCaption(widget.caption, 20);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          truncatedCaption,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        // "See More" button for resetting
+        if (showFullCaption)
+          // "See Less" button
+          TextButton(
+            onPressed: () {
+              // When the button is pressed, reset to the truncated caption
+              setState(() {
+                showFullCaption = false;
+              });
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(
+                  Color.fromARGB(255, 23, 187, 29)), // Set background color
+            ),
+            child: Text(
+              'See Less',
+              style: TextStyle(color: Colors.white), // Set text color
+            ),
+          ),
+        // "Learn More" button
+        if (!showFullCaption)
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                showFullCaption = true;
+              });
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor:
+                  Color.fromARGB(255, 23, 187, 29), // Set background color
+              minimumSize:
+                  Size(50, 40), // Set your desired width and height here
+            ),
+            child: Text(
+              'See More',
+              style: TextStyle(
+                fontSize: 15,
+                color: Colors.white,
+              ), // Set text style
+            ),
+          ),
+      ],
+    );
+  }
+
+  // Helper method to truncate the caption to the first n words
+  String _truncateCaption(String caption, int maxWords) {
+    List<String> words = caption.split(' ');
+    return words.take(maxWords).join(' ');
   }
 }
 
