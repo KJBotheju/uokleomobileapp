@@ -120,11 +120,10 @@ class _AdminContectState extends State<AdminContect> {
     );
   }
 
-  void _deleteProjects() {
-    ScaffoldMessenger.of(context)
-        .hideCurrentSnackBar(); // Hide any existing snackbar
+  void _deleteProjects(String projectId) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-    TextEditingController captionController = TextEditingController();
+    TextEditingController projectIdController = TextEditingController();
 
     showDialog(
       context: context,
@@ -136,9 +135,9 @@ class _AdminContectState extends State<AdminContect> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Enter caption to delete:'),
+                Text('Enter project ID to delete:'),
                 TextField(
-                  controller: captionController,
+                  controller: projectIdController,
                 ),
               ],
             ),
@@ -155,59 +154,58 @@ class _AdminContectState extends State<AdminContect> {
                 ),
                 TextButton(
                   onPressed: () async {
-                    String enteredCaption = captionController.text.trim();
+                    String enteredProjectId = projectIdController.text.trim();
 
-                    if (enteredCaption.isEmpty) {
+                    if (enteredProjectId.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Please enter a caption to delete.'),
+                          content: Text('Please enter a project ID to delete.'),
                           backgroundColor: Colors.red,
                         ),
                       );
                       return;
                     }
 
-                    var querySnapshot = await FirebaseFirestore.instance
+                    var docSnapshot = await FirebaseFirestore.instance
                         .collection('Projects')
-                        .where('caption', isEqualTo: enteredCaption)
+                        .doc(enteredProjectId)
                         .get();
 
-                    if (querySnapshot.docs.isEmpty) {
+                    if (!docSnapshot.exists) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                              'No project found with the entered caption.'),
+                              'No project found with the entered project ID.'),
                           backgroundColor: Colors.red,
                         ),
                       );
                       return;
                     }
 
-                    for (var doc in querySnapshot.docs) {
-                      // Check if 'image_urls' field exists in the document
-                      if (doc.data()!.containsKey('image_urls')) {
-                        var imageUrls = List<String>.from(doc['image_urls']);
-                        for (var imageUrl in imageUrls) {
-                          try {
-                            await FirebaseStorage.instance
-                                .refFromURL(imageUrl)
-                                .delete();
-                          } catch (e) {
-                            print('Error deleting image from storage: $e');
-                          }
+                    // Check if 'image_urls' field exists in the document
+                    if (docSnapshot.data()!.containsKey('image_urls')) {
+                      var imageUrls =
+                          List<String>.from(docSnapshot.data()!['image_urls']);
+                      for (var imageUrl in imageUrls) {
+                        try {
+                          await FirebaseStorage.instance
+                              .refFromURL(imageUrl)
+                              .delete();
+                        } catch (e) {
+                          print('Error deleting image from storage: $e');
                         }
                       }
+                    }
 
-                      try {
-                        await doc.reference.delete();
-                      } catch (e) {
-                        print('Error deleting project document: $e');
-                      }
+                    try {
+                      await docSnapshot.reference.delete();
+                    } catch (e) {
+                      print('Error deleting project document: $e');
                     }
 
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Projects deleted successfully.'),
+                        content: Text('Project deleted successfully.'),
                         backgroundColor: Colors.green,
                       ),
                     );
@@ -305,7 +303,9 @@ class _AdminContectState extends State<AdminContect> {
 
               // Delete Projects Block
               ElevatedButton(
-                onPressed: _deleteProjects,
+                onPressed: () {
+                  _deleteProjects("projectId");
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                 ),

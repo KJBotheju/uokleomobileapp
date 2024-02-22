@@ -134,12 +134,13 @@ class BlogItemWidget extends StatelessWidget {
           children: [
             Image.network(
               imagePath,
-              height: 0.3 * screenWidth,
-              fit: BoxFit.cover,
+              height: 280,
+              fit: BoxFit.fill,
             ),
             Padding(
               padding: EdgeInsets.all(0.04 * screenWidth),
-              child: Text(
+              child: SelectableText(
+                // Wrap with SelectableText
                 blogTitle,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -184,7 +185,7 @@ class BlogItemWidget extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(blogTitle),
+          title: SelectableText(blogTitle), // Wrap with SelectableText
           content: SingleChildScrollView(
             child: Text(blogText),
           ),

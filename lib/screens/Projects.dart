@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 
 class ProjectPage extends StatefulWidget {
   const ProjectPage({Key? key}) : super(key: key);
@@ -26,8 +27,7 @@ class ProjectPageState extends State<ProjectPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
-            height:
-                screenWidth * 0.33, // Adjusted height based on screen height
+            height: screenWidth * 0.33,
             decoration: BoxDecoration(
               color: Color.fromARGB(255, 247, 223, 2),
               borderRadius: BorderRadius.only(
@@ -40,8 +40,7 @@ class ProjectPageState extends State<ProjectPage> {
                 ClipPath(
                   clipper: ArcClipper(),
                   child: Container(
-                    height: screenHeight *
-                        0.02, // Adjusted height based on screen height
+                    height: screenHeight * 0.02,
                     decoration: BoxDecoration(
                       color: const Color.fromARGB(255, 247, 223, 2),
                     ),
@@ -49,28 +48,24 @@ class ProjectPageState extends State<ProjectPage> {
                 ),
                 Positioned(
                   left: 0.05 * screenWidth,
-                  top: 0.1 *
-                      screenWidth, // Adjusted position based on screen height
+                  top: 0.1 * screenWidth,
                   child: CircleAvatar(
                     backgroundImage: AssetImage('assets/images/download.jpeg'),
-                    radius: screenWidth *
-                        0.1, // Adjusted radius based on screen width
+                    radius: screenWidth * 0.1,
                   ),
                 ),
                 Positioned(
                   right: 0.2 * screenWidth,
-                  top: 0.15 *
-                      screenWidth, // Adjusted position based on screen height
+                  top: 0.15 * screenWidth,
                   child: Container(
                     constraints: BoxConstraints(
-                        maxWidth: screenWidth *
-                            0.4), // Adjusted maxWidth based on screen width
+                      maxWidth: screenWidth * 0.4,
+                    ),
                     child: Text(
                       'Projects of Leo Club Of UOK',
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: screenWidth *
-                            0.04, // Adjusted fontSize based on screen width
+                        fontSize: screenWidth * 0.04,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -115,6 +110,8 @@ class YourBlogContentWidget extends StatelessWidget {
       itemCount: projects.length,
       itemBuilder: (context, index) {
         var project = projects[index].data() as Map<String, dynamic>;
+        String projectId = projects[index].id;
+
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -123,12 +120,12 @@ class YourBlogContentWidget extends StatelessWidget {
               // Full-width image
               Image.network(
                 project['image_url'] ?? '',
-                height: 200,
-                fit: BoxFit.cover,
+                height: 300,
+                fit: BoxFit.fill,
               ),
               SizedBox(height: 8),
               // Caption with "Learn More" functionality
-              LearnMoreCaption(project['caption'] ?? ''),
+              LearnMoreCaption(projectId, project['caption'] ?? ''),
               Divider(),
             ],
           ),
@@ -139,9 +136,10 @@ class YourBlogContentWidget extends StatelessWidget {
 }
 
 class LearnMoreCaption extends StatefulWidget {
+  final String projectId;
   final String caption;
 
-  LearnMoreCaption(this.caption);
+  LearnMoreCaption(this.projectId, this.caption);
 
   @override
   _LearnMoreCaptionState createState() => _LearnMoreCaptionState();
@@ -149,15 +147,43 @@ class LearnMoreCaption extends StatefulWidget {
 
 class _LearnMoreCaptionState extends State<LearnMoreCaption> {
   bool showFullCaption = false;
+  late TextEditingController _textEditingController;
+
+  @override
+  void initState() {
+    super.initState();
+    _textEditingController = TextEditingController(text: widget.caption);
+  }
 
   @override
   Widget build(BuildContext context) {
     String truncatedCaption =
-        showFullCaption ? widget.caption : _truncateCaption(widget.caption, 20);
+        showFullCaption ? widget.caption : _truncateCaption(widget.caption, 5);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        // Display projectId with LongPressGestureRecognizer
+        GestureDetector(
+          onLongPress: () {
+            // Copy projectId to clipboard
+            Clipboard.setData(ClipboardData(text: widget.projectId));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Project ID copied to clipboard'),
+              ),
+            );
+          },
+          child: Text(
+            'Project ID: ${widget.projectId}',
+            style: TextStyle(
+              fontSize: 6,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+            textAlign: TextAlign.right,
+          ),
+        ),
         Text(
           truncatedCaption,
           style: TextStyle(
@@ -172,17 +198,14 @@ class _LearnMoreCaptionState extends State<LearnMoreCaption> {
               // When the button is pressed, reset to the truncated caption
               setState(() {
                 showFullCaption = false;
+                _textEditingController.text = truncatedCaption;
               });
             },
-            /*style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(
-                  Color.fromARGB(255, 23, 187, 29)), // Set background color
-            ),*/
             child: Text(
               'See Less',
               style: TextStyle(
                 color: Color.fromARGB(255, 0, 207, 7),
-              ), // Set text color
+              ),
             ),
           ),
         // "Learn More" button
@@ -193,18 +216,12 @@ class _LearnMoreCaptionState extends State<LearnMoreCaption> {
                 showFullCaption = true;
               });
             },
-            /*style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  Color.fromARGB(255, 23, 187, 29), // Set background color
-              minimumSize:
-                  Size(50, 40), // Set your desired width and height here
-            ),*/
             child: Text(
               'See More',
               style: TextStyle(
                 fontSize: 15,
                 color: const Color.fromARGB(255, 0, 207, 7),
-              ), // Set text style
+              ),
             ),
           ),
       ],
