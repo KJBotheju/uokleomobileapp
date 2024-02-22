@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:uokleo/screens/SignIn.dart';
+import 'package:uokleo/screens/admin.dart';
 import './screens/EventPage.dart';
 import './screens/BlogPage.dart';
 import './screens/Projects.dart';
@@ -18,6 +19,7 @@ class _NavBarState extends State<NavBar> {
     BlogPage(),
     ProjectPage(),
     EventPage(),
+    AdminPage()
   ];
 
   @override
@@ -27,7 +29,7 @@ class _NavBarState extends State<NavBar> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
-          if (index == 3) {
+          if (index == 4) {
             // Logout action
             // Here, you can add your logout logic, such as signing out from Firebase or clearing user data
             // Then, navigate to the login page
@@ -58,7 +60,11 @@ class _NavBarState extends State<NavBar> {
             label: 'Upcoming',
           ),
           BottomNavigationBarItem(
-            icon: buildIconWithBox(Icons.logout, 3),
+            icon: buildIconWithBox(Icons.admin_panel_settings_outlined, 3),
+            label: 'Admin',
+          ),
+          BottomNavigationBarItem(
+            icon: buildIconWithBox(Icons.logout, 4),
             label: 'Logout',
           ),
         ],

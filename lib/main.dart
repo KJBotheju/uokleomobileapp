@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'UOK LEO',
       theme: ThemeData(
         primaryColor: const Color.fromARGB(255, 250, 225, 2),

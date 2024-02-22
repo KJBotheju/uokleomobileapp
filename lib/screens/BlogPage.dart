@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors
-
 import 'package:flutter/material.dart';
 
 class BlogPage extends StatefulWidget {
@@ -62,10 +60,6 @@ class _BlogPageState extends State<BlogPage> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: BlogsTitleWidget(),
-          ),
           Expanded(
             child: YourBlogContentWidget(),
           ),
@@ -75,23 +69,56 @@ class _BlogPageState extends State<BlogPage> {
   }
 }
 
-class BlogsTitleWidget extends StatelessWidget {
+class YourBlogContentWidget extends StatelessWidget {
+  final List<String> dummyBlogs = [
+    "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    "Contrary to popular belief, Lorem Ipsum is not simply random text.",
+    "It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.",
+    "Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words.",
+    "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words.",
+    "If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text.",
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return Text(
-      'BLOGS',
-      style: TextStyle(
-        fontSize: 24.0,
-        fontWeight: FontWeight.bold,
-      ),
+    return ListView.builder(
+      itemCount: dummyBlogs.length,
+      itemBuilder: (context, index) {
+        // Adding dummy images and captions to each blog
+        return BlogItemWidget(
+            dummyBlogs[index], 'assets/images/blog_image_$index.jpg');
+      },
     );
   }
 }
 
-class YourBlogContentWidget extends StatelessWidget {
+class BlogItemWidget extends StatelessWidget {
+  final String blogText;
+  final String imagePath;
+
+  BlogItemWidget(this.blogText, this.imagePath);
+
   @override
   Widget build(BuildContext context) {
-    return Placeholder();
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Image.asset(
+              imagePath,
+              height: 150.0,
+              fit: BoxFit.cover,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(blogText),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
