@@ -35,6 +35,7 @@ class _AddBlogState extends State<AddBlog> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Please fill in all fields and select an image.'),
+          backgroundColor: Colors.red,
         ),
       );
       return;
@@ -62,6 +63,7 @@ class _AddBlogState extends State<AddBlog> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Blog submitted successfully.'),
+        backgroundColor: Colors.green,
       ),
     );
 
@@ -77,7 +79,11 @@ class _AddBlogState extends State<AddBlog> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Blog'),
+        title: Text(
+          'Add Blog',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Color.fromARGB(255, 247, 223, 2),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -131,7 +137,7 @@ class _AddBlogState extends State<AddBlog> {
                 controller: _longCaptionController,
                 maxLines: 5,
                 decoration: InputDecoration(
-                  labelText: 'Long Caption',
+                  labelText: 'Description',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -139,15 +145,16 @@ class _AddBlogState extends State<AddBlog> {
               ElevatedButton(
                 onPressed: _submitBlog,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Color.fromARGB(255, 247, 223, 2),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
                 child: Text(
-                  'Submit Blog',
+                  'Upload Blog',
                   style: TextStyle(
                     fontSize: 18.0,
+                    color: Colors.black,
                   ),
                 ),
               ),

@@ -28,7 +28,8 @@ class _AdminPageState extends State<AdminPage> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text("Login Failed"),
-            content: Text("Incorrect password. Please try again."),
+            content: Text(
+                "You can't access this page.\nBecause you are not in the admin panel."),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
@@ -69,7 +70,12 @@ class _AdminPageState extends State<AdminPage> {
               SizedBox(height: 20.0),
               ElevatedButton(
                 onPressed: _login,
-                child: Text('Login'),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 223, 220, 23)),
+                child: Text(
+                  'Login',
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
             ],
           ),
