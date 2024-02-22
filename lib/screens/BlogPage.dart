@@ -124,14 +124,66 @@ class BlogItemWidget extends StatelessWidget {
               fit: BoxFit.cover,
             ),
             Padding(
-                padding: const EdgeInsets.all(16.0), child: Text(blogTitle)),
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                blogTitle,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.0,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Text(blogText),
+              child: Text(
+                blogText,
+                maxLines: 3, // Display only 3 lines initially
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    _showLearnMoreDialog(context, blogText);
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromARGB(255, 23, 187, 29)),
+                  child: Text(
+                    'Learn more',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
       ),
+    );
+  }
+
+  void _showLearnMoreDialog(BuildContext context, String blogText) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(blogTitle),
+          content: SingleChildScrollView(
+            child: Text(blogText),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
