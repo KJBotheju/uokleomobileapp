@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProjectPage extends StatefulWidget {
   const ProjectPage({Key? key}) : super(key: key);
@@ -184,13 +186,29 @@ class _LearnMoreCaptionState extends State<LearnMoreCaption> {
             textAlign: TextAlign.right,
           ),
         ),
-        Text(
-          truncatedCaption,
+        // Convert caption to clickable links
+        Linkify(
+          onOpen: (LinkableElement link) async {
+            try {
+              if (await canLaunch(link.url)) {
+                await launch(link.url);
+              } else {
+                throw 'Could not launch ${link.url}';
+              }
+            } catch (e) {
+              print('Error launching URL: $e');
+              // Show an error message to the user if you want
+            }
+          },
+          text: truncatedCaption,
           style: TextStyle(
             fontSize: 16,
           ),
+          linkStyle: TextStyle(
+            color: Color.fromARGB(255, 11, 36, 137),
+          ),
         ),
-        // "See More" button for resetting
+        // "See Less" button for resetting
         if (showFullCaption)
           // "See Less" button
           TextButton(
