@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:uokleo/HomePage.dart';
 import 'package:uokleo/adminScreen/addblog.dart';
+import 'package:uokleo/adminScreen/addproject.dart';
 
 class AdminContect extends StatefulWidget {
   const AdminContect({Key? key});
@@ -29,7 +30,8 @@ class _AdminContectState extends State<AdminContect> {
   }
 
   void _addProjects() {
-    // Implement logic for adding projects
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (constext) => AddProject()));
     print('Add Projects clicked');
   }
 

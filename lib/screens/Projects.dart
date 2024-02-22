@@ -1,15 +1,22 @@
-// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ProjectPage extends StatefulWidget {
-  const ProjectPage({super.key});
+  const ProjectPage({Key? key}) : super(key: key);
 
   @override
   State<ProjectPage> createState() => ProjectPageState();
 }
 
 class ProjectPageState extends State<ProjectPage> {
+  Future<QuerySnapshot> _getProjects() async {
+    return await FirebaseFirestore.instance
+        .collection('Projects')
+        .orderBy('timestamp',
+            descending: true) // Order by timestamp in descending order
+        .get();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +57,7 @@ class ProjectPageState extends State<ProjectPage> {
                   child: Container(
                     constraints: BoxConstraints(maxWidth: 250.0),
                     child: Text(
-                      'LEO CLUB OF UNIVERSITY OF KALANIYA',
+                      'projects',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 20.0,
@@ -62,12 +69,24 @@ class ProjectPageState extends State<ProjectPage> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: BlogsTitleWidget(),
-          ),
           Expanded(
-            child: YourBlogContentWidget(),
+            child: FutureBuilder(
+              future: _getProjects(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text('Error: ${snapshot.error}'),
+                  );
+                } else {
+                  List<DocumentSnapshot> projects = snapshot.data!.docs;
+                  return YourBlogContentWidget(projects: projects);
+                }
+              },
+            ),
           ),
         ],
       ),
@@ -75,23 +94,43 @@ class ProjectPageState extends State<ProjectPage> {
   }
 }
 
-class BlogsTitleWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      'PROJECTS',
-      style: TextStyle(
-        fontSize: 24.0,
-        fontWeight: FontWeight.bold,
-      ),
-    );
-  }
-}
-
 class YourBlogContentWidget extends StatelessWidget {
+  final List<DocumentSnapshot> projects;
+
+  YourBlogContentWidget({required this.projects});
+
   @override
   Widget build(BuildContext context) {
-    return Placeholder();
+    return ListView.builder(
+      itemCount: projects.length,
+      itemBuilder: (context, index) {
+        var project = projects[index].data() as Map<String, dynamic>;
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Full-width image
+              Image.network(
+                project['image_url'] ?? '',
+                height: 200, // Adjust the height as needed
+                fit: BoxFit.cover,
+              ),
+              SizedBox(height: 8),
+              // Caption
+              Text(
+                project['caption'] ?? '',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Divider(), // Optional: Add a divider between entries
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 
