@@ -64,7 +64,7 @@ class _NavBarState extends State<NavBar> {
             ),
             BottomNavigationBarItem(
               icon: buildIconWithBox(Icons.calendar_today, 2),
-              label: 'Upcoming',
+              label: 'Dates',
               backgroundColor: Color.fromARGB(255, 247, 223, 2),
             ),
             BottomNavigationBarItem(
