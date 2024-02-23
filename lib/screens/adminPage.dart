@@ -224,9 +224,73 @@ class _AdminContectState extends State<AdminContect> {
     );
   }
 
-  void _deleteProjectDate() {
-    // Implement logic for deleting project dates
-    print('Delete Project Date clicked');
+  void _deleteProjectDate() async {
+    // Prompt the user for a project name
+    String? projectName = await _getProjectNameFromUser();
+
+    if (projectName != null && projectName.isNotEmpty) {
+      try {
+        // Query Firestore to find the document with the matching project name
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('Dates')
+            .where('projectName', isEqualTo: projectName)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          // Document found, delete it
+          await querySnapshot.docs.first.reference.delete();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Project date deleted successfully.'),
+              duration: Duration(seconds: 2),
+              backgroundColor: Colors.green,
+            ),
+          );
+        } else {
+          // No matching document found
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('No project date found with the given name.'),
+              duration: Duration(seconds: 2),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } catch (error) {
+        // Handle errors if any
+        print('Error deleting project date: $error');
+      }
+    }
+  }
+
+  Future<String?> _getProjectNameFromUser() async {
+    TextEditingController controller = TextEditingController();
+    return showDialog<String?>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Enter Project Name'),
+          content: TextField(
+            controller: controller,
+            decoration: InputDecoration(hintText: 'Project Name'),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(controller.text);
+              },
+              child: Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
