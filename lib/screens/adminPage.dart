@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:uokleo/HomePage.dart';
 import 'package:uokleo/adminScreen/addblog.dart';
 import 'package:uokleo/adminScreen/addproject.dart';
+import 'package:uokleo/adminScreen/addprojectdate.dart';
 
 class AdminContect extends StatefulWidget {
   const AdminContect({Key? key});
@@ -39,7 +40,8 @@ class _AdminContectState extends State<AdminContect> {
   }
 
   void _addProjectDate() {
-    // Implement logic for adding project dates
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (constext) => AddProjectDate()));
     print('Add Project Date clicked');
   }
 
