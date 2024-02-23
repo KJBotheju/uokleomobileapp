@@ -1,3 +1,5 @@
+// ignore_for_file: use_super_parameters, prefer_const_constructors, use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
@@ -90,6 +92,13 @@ class ProjectPageState extends State<ProjectPage> {
                   );
                 } else {
                   List<DocumentSnapshot> projects = snapshot.data!.docs;
+
+                  if (projects.isEmpty) {
+                    // Display a message when there are no projects
+                    return Center(
+                      child: Text('No projects added yet.'),
+                    );
+                  }
                   return YourBlogContentWidget(projects: projects);
                 }
               },
@@ -119,14 +128,12 @@ class YourBlogContentWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Full-width image
               Image.network(
                 project['image_url'] ?? '',
                 height: 300,
                 fit: BoxFit.fill,
               ),
               SizedBox(height: 8),
-              // Caption with "Learn More" functionality
               LearnMoreCaption(projectId, project['caption'] ?? ''),
               Divider(),
             ],
@@ -165,10 +172,8 @@ class _LearnMoreCaptionState extends State<LearnMoreCaption> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Display projectId with LongPressGestureRecognizer
         GestureDetector(
           onLongPress: () {
-            // Copy projectId to clipboard
             Clipboard.setData(ClipboardData(text: widget.projectId));
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -186,7 +191,6 @@ class _LearnMoreCaptionState extends State<LearnMoreCaption> {
             textAlign: TextAlign.right,
           ),
         ),
-        // Convert caption to clickable links
         Linkify(
           onOpen: (LinkableElement link) async {
             try {
@@ -197,7 +201,6 @@ class _LearnMoreCaptionState extends State<LearnMoreCaption> {
               }
             } catch (e) {
               print('Error launching URL: $e');
-              // Show an error message to the user if you want
             }
           },
           text: truncatedCaption,
@@ -208,12 +211,9 @@ class _LearnMoreCaptionState extends State<LearnMoreCaption> {
             color: Color.fromARGB(255, 11, 36, 137),
           ),
         ),
-        // "See Less" button for resetting
         if (showFullCaption)
-          // "See Less" button
           TextButton(
             onPressed: () {
-              // When the button is pressed, reset to the truncated caption
               setState(() {
                 showFullCaption = false;
                 _textEditingController.text = truncatedCaption;
@@ -226,7 +226,6 @@ class _LearnMoreCaptionState extends State<LearnMoreCaption> {
               ),
             ),
           ),
-        // "Learn More" button
         if (!showFullCaption)
           ElevatedButton(
             onPressed: () {
@@ -246,7 +245,6 @@ class _LearnMoreCaptionState extends State<LearnMoreCaption> {
     );
   }
 
-  // Helper method to truncate the caption to the first n words
   String _truncateCaption(String caption, int maxWords) {
     List<String> words = caption.split(' ');
     return words.take(maxWords).join(' ');
