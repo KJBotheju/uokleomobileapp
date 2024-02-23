@@ -29,7 +29,6 @@ class _EventPageState extends State<EventPage> {
   }
 
   Future<List<Map<String, dynamic>>> _getEvents(DateTime day) async {
-    // Fetch data from Firestore
     final QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
         .instance
         .collection('Dates')
@@ -38,7 +37,6 @@ class _EventPageState extends State<EventPage> {
         .where('date', isEqualTo: day.day.toString())
         .get();
 
-    // Extract data from the snapshot
     return snapshot.docs.map((DocumentSnapshot<Map<String, dynamic>> doc) {
       return doc.data()!;
     }).toList();

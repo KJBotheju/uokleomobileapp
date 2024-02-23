@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:uokleo/HomePage.dart';
+import 'package:uokleo/screens/SignIn.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -22,10 +22,9 @@ class _SplashScreenState extends State<SplashScreen>
     _animation = Tween<double>(begin: 0, end: 1).animate(_animationController!);
     _animationController!.forward();
     Timer(Duration(seconds: 3), () {
-      // Navigate to the home screen after 3 seconds
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (context) => SignInPage()),
       );
     });
   }
@@ -46,12 +45,11 @@ class _SplashScreenState extends State<SplashScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Replace this Container with your animated Image widget
               AnimatedOpacity(
                 opacity: 1,
                 duration: Duration(seconds: 1),
                 child: Image.asset(
-                  'assets/images/download.jpeg', // replace with your image path
+                  'assets/images/download.jpeg',
                   height: 150,
                   width: 150,
                 ),

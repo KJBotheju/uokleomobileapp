@@ -1,6 +1,8 @@
+// ignore_for_file: prefer_final_fields, prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uokleo/HomePage.dart';
 import 'package:uokleo/resuable_widgets/reusable_widgets.dart';
 
@@ -19,8 +21,7 @@ class SignUpPageState extends State<SignUpPage> {
       TextEditingController();
 
   FirebaseAuth _auth = FirebaseAuth.instance;
-  FirebaseFirestore _firestore =
-      FirebaseFirestore.instance; // Initialize Firestore
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -76,71 +77,62 @@ class SignUpPageState extends State<SignUpPage> {
                 const SizedBox(
                   height: 20,
                 ),
-                SignInSignUpButton(context, false, () async {
-                  // Validate the form fields
-                  if (_userNameTextController.text.isEmpty ||
-                      _emailTextController.text.isEmpty ||
-                      _passwordTextController.text.isEmpty ||
-                      _confirmPasswordTextController.text.isEmpty) {
-                    // Show an error message if any field is empty
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Please fill in all fields.'),
-                      ),
-                    );
-                    return;
-                  }
-
-                  // Check if the passwords match
-                  if (_passwordTextController.text !=
-                      _confirmPasswordTextController.text) {
-                    // Show an error message if passwords don't match
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Passwords do not match.'),
-                      ),
-                    );
-                    return;
-                  }
-
-                  try {
-                    // Create a new user with email and password
-                    UserCredential userCredential =
-                        await _auth.createUserWithEmailAndPassword(
-                      email: _emailTextController.text,
-                      password: _passwordTextController.text,
-                    );
-
-                    // Save user data to Firestore
-                    await _firestore
-                        .collection('Users')
-                        .doc(userCredential.user!.uid)
-                        .set({
-                      'username': _userNameTextController.text,
-                      'email': _emailTextController.text,
-                      'password': _passwordTextController.text,
-                      // Add more fields as needed
-                    });
-
-                    // If successful, navigate to the homepage
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                    );
-                  } catch (e) {
-                    // Show an error message if authentication fails
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Error: $e'),
-                      ),
-                    );
-                  }
-                })
+                SignInSignUpButton(context, false, _signUp),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _signUp() async {
+    if (_userNameTextController.text.isEmpty ||
+        _emailTextController.text.isEmpty ||
+        _passwordTextController.text.isEmpty ||
+        _confirmPasswordTextController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please fill in all fields.'),
+        ),
+      );
+      return;
+    }
+
+    if (_passwordTextController.text != _confirmPasswordTextController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Passwords do not match.'),
+        ),
+      );
+      return;
+    }
+
+    try {
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: _emailTextController.text,
+        password: _passwordTextController.text,
+      );
+
+      // Save user data to Firestore
+      await _firestore.collection('Users').doc(userCredential.user!.uid).set({
+        'userId': userCredential.user!.uid,
+        'username': _userNameTextController.text,
+        'email': _emailTextController.text,
+        'password': _passwordTextController.text,
+      });
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+        ),
+      );
+    }
   }
 }

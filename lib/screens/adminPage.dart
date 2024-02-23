@@ -17,8 +17,8 @@ class AdminContect extends StatefulWidget {
 
 class _AdminContectState extends State<AdminContect> {
   TextEditingController projectNameController = TextEditingController();
-  String? selectedCaption; // Define selectedCaption
-  Set<QueryDocumentSnapshot> selectedProjects = {}; // Define selectedProjects
+  String? selectedCaption;
+  Set<QueryDocumentSnapshot> selectedProjects = {};
 
   void _goBack() {
     Navigator.pushReplacement(
@@ -46,8 +46,7 @@ class _AdminContectState extends State<AdminContect> {
   }
 
   void _deleteBlogs() {
-    ScaffoldMessenger.of(context)
-        .hideCurrentSnackBar(); // Hide any existing snackbar
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
     showDialog(
       context: context,
@@ -56,7 +55,7 @@ class _AdminContectState extends State<AdminContect> {
           title: Text('Delete Blogs'),
           content: SingleChildScrollView(
             child: Column(
-              mainAxisSize: MainAxisSize.min, // Set to min to wrap content
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Enter the project title:'),
