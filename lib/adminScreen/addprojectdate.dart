@@ -16,6 +16,25 @@ class _AddProjectDateState extends State<AddProjectDate> {
   final TextEditingController startTimeController = TextEditingController();
   final TextEditingController projectNameController = TextEditingController();
 
+  DateTime selectedDate = DateTime.now();
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2023),
+      lastDate: DateTime(2026),
+    );
+
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+        yearController.text = selectedDate.year.toString();
+        monthController.text = selectedDate.month.toString();
+        dateController.text = selectedDate.day.toString();
+      });
+  }
+
   void _uploadProjectDate() async {
     if (yearController.text.isEmpty ||
         monthController.text.isEmpty ||
@@ -89,45 +108,60 @@ class _AddProjectDateState extends State<AddProjectDate> {
           },
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: yearController,
-              decoration: InputDecoration(labelText: 'Year'),
-            ),
-            TextField(
-              controller: monthController,
-              decoration: InputDecoration(labelText: 'Month'),
-            ),
-            TextField(
-              controller: dateController,
-              decoration: InputDecoration(labelText: 'Date'),
-            ),
-            TextField(
-              controller: startTimeController,
-              decoration: InputDecoration(labelText: 'Start Time'),
-            ),
-            TextField(
-              controller: projectNameController,
-              decoration: InputDecoration(labelText: 'Project Name'),
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _uploadProjectDate,
-              child: Text(
-                'Upload Project Date',
-                style: TextStyle(color: Colors.black),
-              ),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
-                  Color.fromARGB(255, 247, 223, 2),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ElevatedButton(
+                onPressed: () => _selectDate(context),
+                child: Text(
+                  'Select Date',
+                  style: TextStyle(color: Colors.white),
+                ),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                    Color.fromARGB(255, 23, 187, 29),
+                  ),
                 ),
               ),
-            ),
-          ],
+              SizedBox(height: 16),
+              TextField(
+                controller: yearController,
+                decoration: InputDecoration(labelText: 'Year'),
+              ),
+              TextField(
+                controller: monthController,
+                decoration: InputDecoration(labelText: 'Month'),
+              ),
+              TextField(
+                controller: dateController,
+                decoration: InputDecoration(labelText: 'Date'),
+              ),
+              TextField(
+                controller: startTimeController,
+                decoration: InputDecoration(labelText: 'Start Time'),
+              ),
+              TextField(
+                controller: projectNameController,
+                decoration: InputDecoration(labelText: 'Project Name'),
+              ),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _uploadProjectDate,
+                child: Text(
+                  'Upload Project Date',
+                  style: TextStyle(color: Colors.black),
+                ),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                    Color.fromARGB(255, 247, 223, 2),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
