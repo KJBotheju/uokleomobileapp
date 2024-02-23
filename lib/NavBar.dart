@@ -60,18 +60,22 @@ class _NavBarState extends State<NavBar> {
             BottomNavigationBarItem(
               icon: buildIconWithBox(Icons.work_outline_rounded, 1),
               label: 'Projects',
+              backgroundColor: Color.fromARGB(255, 247, 223, 2),
             ),
             BottomNavigationBarItem(
               icon: buildIconWithBox(Icons.calendar_today, 2),
               label: 'Upcoming',
+              backgroundColor: Color.fromARGB(255, 247, 223, 2),
             ),
             BottomNavigationBarItem(
               icon: buildIconWithBox(Icons.admin_panel_settings_outlined, 3),
               label: 'Admin',
+              backgroundColor: Color.fromARGB(255, 247, 223, 2),
             ),
             BottomNavigationBarItem(
               icon: buildIconWithBox(Icons.logout, 4),
               label: 'Logout',
+              backgroundColor: Color.fromARGB(255, 247, 223, 2),
             ),
           ],
         ),
