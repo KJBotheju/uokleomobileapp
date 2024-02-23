@@ -41,7 +41,7 @@ class SignUpPageState extends State<SignUpPage> {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.fromLTRB(
-                20, MediaQuery.of(context).size.height * 0.09, 20, 0),
+                20, MediaQuery.of(context).size.height * 0.07, 20, 0),
             child: Column(
               children: <Widget>[
                 logoWidget("assets/images/download.jpeg"),
@@ -55,27 +55,27 @@ class SignUpPageState extends State<SignUpPage> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 15,
                 ),
                 reusableTextField("UserName", Icons.person_outline, false,
                     _userNameTextController),
                 const SizedBox(
-                  height: 20,
+                  height: 15,
                 ),
                 reusableTextField(
                     "Email", Icons.person_outline, false, _emailTextController),
                 const SizedBox(
-                  height: 20,
+                  height: 15,
                 ),
                 reusableTextField("New Password", Icons.lock_outline, true,
                     _passwordTextController),
                 const SizedBox(
-                  height: 20,
+                  height: 15,
                 ),
                 reusableTextField("Confirm Password", Icons.lock_outline, true,
                     _confirmPasswordTextController),
                 const SizedBox(
-                  height: 20,
+                  height: 15,
                 ),
                 SignInSignUpButton(context, false, _signUp),
               ],

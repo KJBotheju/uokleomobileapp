@@ -25,7 +25,6 @@ class SingInPageState extends State<SignInPage> {
         password: _passwordTextController.text,
       );
 
-      // Successful login, navigate to the home page
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),
@@ -85,7 +84,11 @@ class SingInPageState extends State<SignInPage> {
                 SizedBox(
                   height: 20,
                 ),
-                SignInSignUpButton(context, true, () => _signIn(context)),
+                SignInSignUpButton(
+                  context,
+                  true,
+                  () => _signIn(context),
+                ),
                 SignUpOption(),
               ],
             ),
