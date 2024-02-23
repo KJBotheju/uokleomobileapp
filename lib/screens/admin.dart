@@ -74,7 +74,7 @@ class _AdminPageState extends State<AdminPage> {
                   backgroundColor: Color.fromARGB(255, 247, 223, 2),
                 ),
                 child: Text(
-                  'Login',
+                  'Admin Login',
                   style: TextStyle(color: Colors.black),
                 ),
               ),
