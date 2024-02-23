@@ -1,9 +1,6 @@
-// ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, use_key_in_widget_constructors
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:uokleo/HomePage.dart';
-//import 'package:uokleo/screens/SignIn.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -20,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1500),
+      duration: Duration(milliseconds: 3000),
     );
     _animation = Tween<double>(begin: 0, end: 1).animate(_animationController!);
     _animationController!.forward();
@@ -28,7 +25,6 @@ class _SplashScreenState extends State<SplashScreen>
       // Navigate to the home screen after 3 seconds
       Navigator.pushReplacement(
         context,
-        //MaterialPageRoute(builder: (context) => SignInPage()),
         MaterialPageRoute(builder: (context) => HomePage()),
       );
     });
@@ -50,15 +46,23 @@ class _SplashScreenState extends State<SplashScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 10),
-              Container(
-                child: Text(
-                  "UOK LEO",
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.amber,
-                  ),
+              // Replace this Container with your animated Image widget
+              AnimatedOpacity(
+                opacity: 1,
+                duration: Duration(seconds: 1),
+                child: Image.asset(
+                  'assets/images/download.jpeg', // replace with your image path
+                  height: 150,
+                  width: 150,
+                ),
+              ),
+              SizedBox(height: 20),
+              Text(
+                'UOK LEO',
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.amber,
                 ),
               ),
             ],
@@ -68,4 +72,3 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 }
-//
