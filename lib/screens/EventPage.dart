@@ -47,111 +47,113 @@ class _EventPageState extends State<EventPage> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            height: 0.33 * screenWidth,
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 247, 223, 2),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20.0),
-                bottomRight: Radius.circular(20.0),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              height: 0.33 * screenWidth,
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 247, 223, 2),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(20.0),
+                  bottomRight: Radius.circular(20.0),
+                ),
               ),
-            ),
-            child: Stack(
-              children: [
-                ClipPath(
-                  clipper: ArcClipper(),
-                  child: Container(
-                    height: 20.0,
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 247, 223, 2),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: 0.05 * screenWidth,
-                  top: 0.1 * screenWidth,
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage('assets/images/download.jpeg'),
-                    radius: 0.1 * screenWidth,
-                  ),
-                ),
-                Positioned(
-                  right: 0.15 * screenWidth,
-                  top: 0.15 * screenWidth,
-                  child: Container(
-                    constraints: BoxConstraints(maxWidth: 0.5 * screenWidth),
-                    child: Text(
-                      'Stay on Track with Projects Dates',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 0.04 * screenWidth,
-                        fontWeight: FontWeight.bold,
+              child: Stack(
+                children: [
+                  ClipPath(
+                    clipper: ArcClipper(),
+                    child: Container(
+                      height: 20.0,
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 247, 223, 2),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              'Selected Day: ${_selectedDay.toLocal().toString().split(' ')[0]}',
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-            ),
-          ),
-          TableCalendar(
-            calendarFormat: _calendarController.calendarFormat,
-            calendarStyle: CalendarStyle(
-              todayDecoration: BoxDecoration(
-                color: Colors.yellowAccent,
-                shape: BoxShape.circle,
-              ),
-              selectedDecoration: BoxDecoration(
-                color: Colors.blue,
-                shape: BoxShape.circle,
-              ),
-              selectedTextStyle: TextStyle(color: Colors.white),
-              todayTextStyle: TextStyle(color: Colors.black),
-              markersMaxCount: 5,
-            ),
-            headerStyle: HeaderStyle(
-              formatButtonVisible: false,
-              titleTextStyle: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            focusedDay: _selectedDay,
-            firstDay: DateTime(2023, 1, 1),
-            lastDay: DateTime(2025, 12, 31),
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDay = selectedDay;
-              });
-            },
-          ),
-          FutureBuilder(
-            future: _getEvents(_selectedDay),
-            builder:
-                (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return Text(
-                  'No events for the selected day.',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
+                  Positioned(
+                    left: 0.05 * screenWidth,
+                    top: 0.1 * screenWidth,
+                    child: CircleAvatar(
+                      backgroundImage:
+                          AssetImage('assets/images/download.jpeg'),
+                      radius: 0.1 * screenWidth,
+                    ),
                   ),
-                );
-              } else {
-                return Expanded(
-                  child: ListView.builder(
+                  Positioned(
+                    right: 0.15 * screenWidth,
+                    top: 0.15 * screenWidth,
+                    child: Container(
+                      constraints: BoxConstraints(maxWidth: 0.5 * screenWidth),
+                      child: Text(
+                        'Stay on Track with Projects Dates',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 0.04 * screenWidth,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                'Selected Day: ${_selectedDay.toLocal().toString().split(' ')[0]}',
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              ),
+            ),
+            TableCalendar(
+              calendarFormat: _calendarController.calendarFormat,
+              calendarStyle: CalendarStyle(
+                todayDecoration: BoxDecoration(
+                  color: Colors.yellowAccent,
+                  shape: BoxShape.circle,
+                ),
+                selectedDecoration: BoxDecoration(
+                  color: Colors.blue,
+                  shape: BoxShape.circle,
+                ),
+                selectedTextStyle: TextStyle(color: Colors.white),
+                todayTextStyle: TextStyle(color: Colors.black),
+                markersMaxCount: 5,
+              ),
+              headerStyle: HeaderStyle(
+                formatButtonVisible: false,
+                titleTextStyle: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              focusedDay: _selectedDay,
+              firstDay: DateTime(2023, 1, 1),
+              lastDay: DateTime(2025, 12, 31),
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  _selectedDay = selectedDay;
+                });
+              },
+            ),
+            FutureBuilder(
+              future: _getEvents(_selectedDay),
+              builder: (context,
+                  AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Text(
+                    'No events for the selected day.',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                } else {
+                  return ListView.builder(
+                    shrinkWrap: true,
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       Map<String, dynamic> event = snapshot.data![index];
@@ -166,12 +168,12 @@ class _EventPageState extends State<EventPage> {
                         ),
                       );
                     },
-                  ),
-                );
-              }
-            },
-          ),
-        ],
+                  );
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
