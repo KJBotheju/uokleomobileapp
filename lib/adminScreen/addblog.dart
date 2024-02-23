@@ -50,29 +50,41 @@ class _AddBlogState extends State<AddBlog> {
     // Get the download URL of the uploaded image
     final imageUrl = await storageRef.getDownloadURL();
 
-    // Store the blog data in Firestore
-    await FirebaseFirestore.instance.collection('Blogs').add({
-      'title': _titleController.text,
-      'long_caption': _longCaptionController.text,
-      'image_url': imageUrl,
-      'timestamp': FieldValue.serverTimestamp(),
-      // Add more fields as needed
-    });
+    // Check if both title and long caption are not empty before adding to Firestore
+    if (_titleController.text.isNotEmpty &&
+        _longCaptionController.text.isNotEmpty) {
+      // Store the blog data in Firestore
+      await FirebaseFirestore.instance.collection('Blogs').add({
+        'title': _titleController.text,
+        'long_caption': _longCaptionController.text,
+        'image_url': imageUrl,
+        'timestamp': FieldValue.serverTimestamp(),
+        // Add more fields as needed
+      });
 
-    // Show a success message
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Blog submitted successfully.'),
-        backgroundColor: Colors.green,
-      ),
-    );
+      // Show a success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Blog submitted successfully.'),
+          backgroundColor: Colors.green,
+        ),
+      );
 
-    // Clear the form fields after submission
-    _titleController.clear();
-    _longCaptionController.clear();
-    setState(() {
-      _image = null;
-    });
+      // Clear the form fields after submission
+      _titleController.clear();
+      _longCaptionController.clear();
+      setState(() {
+        _image = null;
+      });
+    } else {
+      // Show an error message if either title or long caption is empty
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please fill in both title and description.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override

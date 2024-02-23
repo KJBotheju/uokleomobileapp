@@ -30,29 +30,45 @@ class _AddProjectState extends State<AddProject> {
 
     if (_image != null && caption.isNotEmpty) {
       try {
-        // Upload image to Firestore storage
-        String imageUrl = await _uploadImageToStorage();
+        // Check if a project with the same caption already exists
+        final existingProjects = await FirebaseFirestore.instance
+            .collection('Projects')
+            .where('caption', isEqualTo: caption)
+            .get();
 
-        // Add project data to Firestore with a timestamp field
-        await FirebaseFirestore.instance.collection('Projects').add({
-          'image_url': imageUrl,
-          'caption': caption,
-          'timestamp': FieldValue.serverTimestamp(), // Add timestamp field
-        });
+        if (existingProjects.docs.isEmpty) {
+          // Upload image to Firestore storage
+          String imageUrl = await _uploadImageToStorage();
 
-        // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Project uploaded successfully!'),
-            backgroundColor: Colors.green,
-          ),
-        );
+          // Add project data to Firestore with a timestamp field
+          await FirebaseFirestore.instance.collection('Projects').add({
+            'image_url': imageUrl,
+            'caption': caption,
+            'timestamp': FieldValue.serverTimestamp(), // Add timestamp field
+          });
 
-        // Redirect to AdminContent page
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => AdminContect()),
-        );
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Project uploaded successfully!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+
+          // Redirect to AdminContent page
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => AdminContect()),
+          );
+        } else {
+          // Show error message if a project with the same caption already exists
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('A project with the same caption already exists.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       } catch (e) {
         print('Error uploading project: $e');
         // Show error message
