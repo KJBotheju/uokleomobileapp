@@ -1,8 +1,7 @@
-// ignore_for_file: prefer_const_constructors, prefer_final_fields
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:uokleo/HomePage.dart';
 import 'package:uokleo/resuable_widgets/reusable_widgets.dart';
 
@@ -22,6 +21,7 @@ class SignUpPageState extends State<SignUpPage> {
 
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
@@ -60,7 +60,6 @@ class SignUpPageState extends State<SignUpPage> {
                 const SizedBox(
                   height: 15,
                 ),
-                // TextField for UserName
                 TextField(
                   controller: _userNameTextController,
                   style: TextStyle(
@@ -157,7 +156,6 @@ class SignUpPageState extends State<SignUpPage> {
                 const SizedBox(
                   height: 15,
                 ),
-                // TextField for Confirm Password
                 TextField(
                   controller: _confirmPasswordTextController,
                   style: TextStyle(
@@ -199,27 +197,68 @@ class SignUpPageState extends State<SignUpPage> {
                 const SizedBox(
                   height: 15,
                 ),
-                // TextButton for Sign Up
                 Container(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: TextButton(
                     onPressed: () => _signUp(),
                     style: TextButton.styleFrom(
-                      backgroundColor:
-                          Color.fromARGB(255, 247, 223, 2), // Change to red
+                      backgroundColor: Color.fromARGB(255, 247, 223, 2),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
                     child: Text(
-                      "Sign Up",
+                      "SIGN UP",
                       style: TextStyle(
-                        color: Colors.black, // Adjust color as needed
+                        color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                 ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Text("or"),
+                const SizedBox(
+                  height: 15,
+                ),
+                // TextButton for Google Sign Up
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: TextButton(
+                    onPressed: () => _googleSignUp(),
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Google Icon
+                        Image.asset(
+                          'assets/images/google.png', // Replace with your actual asset path
+                          height: 24, // Adjust the height as needed
+                          width: 24, // Adjust the width as needed
+                        ),
+                        SizedBox(
+                            width:
+                                10), // Add some spacing between the icon and text
+                        // Text
+                        Text(
+                          "SIGN UP WITH GOOGLE",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
                 const SizedBox(
                   height: 15,
                 ),
@@ -232,30 +271,30 @@ class SignUpPageState extends State<SignUpPage> {
   }
 
   Future<void> _signUp() async {
-    if (_userNameTextController.text.isEmpty ||
-        _emailTextController.text.isEmpty ||
-        _passwordTextController.text.isEmpty ||
-        _confirmPasswordTextController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please fill in all fields.'),
-          backgroundColor: Colors.red, // Change to red
-        ),
-      );
-      return;
-    }
-
-    if (_passwordTextController.text != _confirmPasswordTextController.text) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Passwords do not match.'),
-          backgroundColor: Colors.red, // Change to red
-        ),
-      );
-      return;
-    }
-
     try {
+      if (_userNameTextController.text.isEmpty ||
+          _emailTextController.text.isEmpty ||
+          _passwordTextController.text.isEmpty ||
+          _confirmPasswordTextController.text.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Please fill in all fields.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+
+      if (_passwordTextController.text != _confirmPasswordTextController.text) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Passwords do not match.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+
       UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
         email: _emailTextController.text,
@@ -270,6 +309,13 @@ class SignUpPageState extends State<SignUpPage> {
         'password': _passwordTextController.text,
       });
 
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Sign Up successful!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),
@@ -278,7 +324,58 @@ class SignUpPageState extends State<SignUpPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: $e'),
-          backgroundColor: Colors.red, // Change to red
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> _googleSignUp() async {
+    try {
+      // Sign out from any existing Google account
+      await _googleSignIn.signOut();
+
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) return;
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
+
+      // Save user data to Firestore
+      await _firestore.collection('Users').doc(userCredential.user!.uid).set({
+        'userId': userCredential.user!.uid,
+        'username': userCredential.user!.displayName ?? '',
+        'email': userCredential.user!.email ?? '',
+        // Add more fields as needed
+        'googleSignIn': true,
+        // Additional fields specific to Google sign-in
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+              'Google Sign Up successful! Email: ${userCredential.user!.email}'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Google Sign Up error: $e'),
+          backgroundColor: Colors.red,
         ),
       );
     }

@@ -56,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen>
               ),
               SizedBox(height: 20),
               Text(
-                'UOK LEO',
+                'UOK LEOS',
                 style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.w900,
