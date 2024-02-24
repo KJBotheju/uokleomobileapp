@@ -10,19 +10,17 @@ class AdminPage extends StatefulWidget {
 
 class _AdminPageState extends State<AdminPage> {
   final TextEditingController _passwordController = TextEditingController();
-  final String correctPassword = "123"; // Updated correct password
+  final String correctPassword = "123";
 
   void _login() {
     String enteredPassword = _passwordController.text.trim();
 
     if (enteredPassword == correctPassword) {
-      // Successful login, navigate to AdminContect
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => AdminContect()),
       );
     } else {
-      // Incorrect password, show error message
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -54,7 +52,7 @@ class _AdminPageState extends State<AdminPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/images/download.jpeg', // Replace with the path to your admin image
+                'assets/images/download.jpeg',
                 width: 120.0,
                 height: 120.0,
                 fit: BoxFit.cover,

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_final_fields, prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -87,7 +89,6 @@ class SignUpPageState extends State<SignUpPage> {
                 const SizedBox(
                   height: 15,
                 ),
-                // TextField for Email
                 TextField(
                   controller: _emailTextController,
                   style: TextStyle(
@@ -115,7 +116,6 @@ class SignUpPageState extends State<SignUpPage> {
                 const SizedBox(
                   height: 15,
                 ),
-                // TextField for New Password
                 TextField(
                   controller: _passwordTextController,
                   style: TextStyle(
@@ -223,7 +223,6 @@ class SignUpPageState extends State<SignUpPage> {
                 const SizedBox(
                   height: 15,
                 ),
-                // TextButton for Google Sign Up
                 Container(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: TextButton(
@@ -239,14 +238,11 @@ class SignUpPageState extends State<SignUpPage> {
                       children: [
                         // Google Icon
                         Image.asset(
-                          'assets/images/google.png', // Replace with your actual asset path
-                          height: 24, // Adjust the height as needed
-                          width: 24, // Adjust the width as needed
+                          'assets/images/google.png',
+                          height: 24,
+                          width: 24,
                         ),
-                        SizedBox(
-                            width:
-                                10), // Add some spacing between the icon and text
-                        // Text
+                        SizedBox(width: 10),
                         Text(
                           "SIGN UP WITH GOOGLE",
                           style: TextStyle(
@@ -258,7 +254,6 @@ class SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                 ),
-
                 const SizedBox(
                   height: 15,
                 ),
@@ -347,14 +342,12 @@ class SignUpPageState extends State<SignUpPage> {
       UserCredential userCredential =
           await _auth.signInWithCredential(credential);
 
-      // Check if the user already exists in Firestore
       DocumentSnapshot userDoc = await _firestore
           .collection('Users')
           .doc(userCredential.user!.uid)
           .get();
 
       if (!userDoc.exists) {
-        // Save user data to Firestore only if the user doesn't exist
         await _firestore.collection('Users').doc(userCredential.user!.uid).set({
           'userId': userCredential.user!.uid,
           'username': userCredential.user!.displayName ?? '',

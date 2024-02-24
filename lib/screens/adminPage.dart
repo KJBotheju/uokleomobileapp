@@ -96,11 +96,9 @@ class _AdminContectState extends State<AdminContect> {
                         ),
                       );
                     } else {
-                      // Delete the project and related details
                       var projectDoc = projectQuery.docs.first;
                       await projectDoc.reference.delete();
 
-                      // Show a success message using a SnackBar
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text('Blog deleted successfully.'),
@@ -108,7 +106,7 @@ class _AdminContectState extends State<AdminContect> {
                         ),
                       );
 
-                      Navigator.of(context).pop(); // Close the delete dialog
+                      Navigator.of(context).pop();
                     }
                   },
                   child: Text('Delete'),
@@ -183,7 +181,6 @@ class _AdminContectState extends State<AdminContect> {
                       return;
                     }
 
-                    // Check if 'image_urls' field exists in the document
                     if (docSnapshot.data()!.containsKey('image_urls')) {
                       var imageUrls =
                           List<String>.from(docSnapshot.data()!['image_urls']);
@@ -211,7 +208,7 @@ class _AdminContectState extends State<AdminContect> {
                       ),
                     );
 
-                    Navigator.of(context).pop(); // Close the delete dialog
+                    Navigator.of(context).pop();
                   },
                   child: Text('Delete'),
                 ),
@@ -224,19 +221,16 @@ class _AdminContectState extends State<AdminContect> {
   }
 
   void _deleteProjectDate() async {
-    // Prompt the user for a project name
     String? projectName = await _getProjectNameFromUser();
 
     if (projectName != null && projectName.isNotEmpty) {
       try {
-        // Query Firestore to find the document with the matching project name
         QuerySnapshot querySnapshot = await FirebaseFirestore.instance
             .collection('Dates')
             .where('projectName', isEqualTo: projectName)
             .get();
 
         if (querySnapshot.docs.isNotEmpty) {
-          // Document found, delete it
           await querySnapshot.docs.first.reference.delete();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -246,7 +240,6 @@ class _AdminContectState extends State<AdminContect> {
             ),
           );
         } else {
-          // No matching document found
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('No project date found with the given name.'),
@@ -307,7 +300,6 @@ class _AdminContectState extends State<AdminContect> {
         ),
       ),
       body: SingleChildScrollView(
-        // Wrap your entire content with SingleChildScrollView
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(

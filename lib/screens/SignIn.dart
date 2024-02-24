@@ -78,21 +78,17 @@ class SingInPageState extends State<SignInPage> {
         idToken: googleAuth.idToken,
       );
 
-      // Check if the user with this Google email already exists
       User? existingUser = await _auth
           .fetchSignInMethodsForEmail(googleUser.email)
           .then((methods) {
         if (methods.isNotEmpty) {
-          // User already exists, don't sign in
           return _auth.currentUser;
         } else {
-          // User doesn't exist, proceed with sign in
           return null;
         }
       });
 
       if (existingUser == null) {
-        // User doesn't exist, create a new account
         UserCredential userCredential =
             await _auth.signInWithCredential(credential);
 
@@ -104,9 +100,7 @@ class SingInPageState extends State<SignInPage> {
           'userId': userCredential.user!.uid,
           'username': userCredential.user!.displayName ?? '',
           'email': userCredential.user!.email ?? '',
-          // Add more fields as needed
           'googleSignIn': true,
-          // Additional fields specific to Google sign-in
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -121,7 +115,6 @@ class SingInPageState extends State<SignInPage> {
           MaterialPageRoute(builder: (context) => HomePage()),
         );
       } else {
-        // User already exists, show a message or handle accordingly
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('This email is already associated with an account.'),
@@ -174,7 +167,6 @@ class SingInPageState extends State<SignInPage> {
                 SizedBox(
                   height: 30,
                 ),
-                // Customized style for username TextField
                 TextField(
                   style: TextStyle(
                     color: Colors.black,
@@ -202,7 +194,6 @@ class SingInPageState extends State<SignInPage> {
                 SizedBox(
                   height: 30,
                 ),
-                // Customized style for password TextField
                 TextField(
                   style: TextStyle(
                     color: Colors.black,
@@ -243,14 +234,12 @@ class SingInPageState extends State<SignInPage> {
                 SizedBox(
                   height: 20,
                 ),
-                // Background color for the Sign In button
                 Container(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: ElevatedButton(
                     onPressed: () => _signIn(context),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(
-                          255, 247, 223, 2), // Adjust color as needed
+                      backgroundColor: Color.fromARGB(255, 247, 223, 2),
                     ),
                     child: Text(
                       "Sign In",
@@ -272,15 +261,15 @@ class SingInPageState extends State<SignInPage> {
                   child: ElevatedButton(
                     onPressed: () => _googleLogIn(context),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white, // Adjust color as needed
+                      backgroundColor: Colors.white,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.asset(
-                          'assets/images/google.png', // Replace with your actual asset path
-                          height: 24, // Adjust the height as needed
-                          width: 24, // Adjust the width as needed
+                          'assets/images/google.png',
+                          height: 24,
+                          width: 24,
                         ),
                         SizedBox(width: 10),
                         Text(
