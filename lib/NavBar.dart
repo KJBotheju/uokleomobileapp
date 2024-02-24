@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:uokleo/screens/SignIn.dart';
 import 'package:uokleo/screens/admin.dart';
@@ -39,12 +40,7 @@ class _NavBarState extends State<NavBar> {
           onTap: (index) {
             if (index == 4) {
               // Logout action
-              // Here, you can add your logout logic, such as signing out from Firebase or clearing user data
-              // Then, navigate to the login page
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => SignInPage()),
-              );
+              _signOut();
             } else {
               setState(() {
                 _currentIndex = index;
@@ -81,6 +77,19 @@ class _NavBarState extends State<NavBar> {
         ),
       ),
     );
+  }
+
+  Future<void> _signOut() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => SignInPage()),
+      );
+    } catch (e) {
+      print('Error during sign out: $e');
+      // Handle sign-out error if necessary
+    }
   }
 
   Widget buildIconWithBox(IconData icon, int index) {
