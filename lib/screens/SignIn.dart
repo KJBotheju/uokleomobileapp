@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields, unused_local_variable, use_build_context_synchronously, prefer_const_constructors
+// ignore_for_file: unused_local_variable, prefer_const_constructors
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,9 +16,17 @@ class SignInPage extends StatefulWidget {
 class SingInPageState extends State<SignInPage> {
   TextEditingController _passwordTextController = TextEditingController();
   TextEditingController _emailTextController = TextEditingController();
+  bool _isPasswordVisible = false;
 
   Future<void> _signIn(BuildContext context) async {
     try {
+      // Check if fields are empty
+      if (_emailTextController.text.isEmpty ||
+          _passwordTextController.text.isEmpty) {
+        _showErrorSnackBar(context, 'Please fill in all fields.');
+        return;
+      }
+
       UserCredential userCredential =
           await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailTextController.text,
@@ -34,8 +42,18 @@ class SingInPageState extends State<SignInPage> {
         _showErrorSnackBar(context, 'Email is incorrect.');
       } else if (e.code == 'wrong-password') {
         _showErrorSnackBar(context, 'Password is incorrect.');
+      } else if (e.code == 'invalid-credential') {
+        // Handle the case of invalid credentials (malformed or expired)
+        _showErrorSnackBar(context, 'Invalid credentials. Please try again.');
+      } else {
+        // Handle other FirebaseAuthException
+        _showErrorSnackBar(context, 'Authentication failed. ${e.message}');
       }
+    } on FirebaseException catch (e) {
+      // Handle other FirebaseException
+      _showErrorSnackBar(context, 'Firebase error. ${e.message}');
     } catch (e) {
+      // Handle other unexpected errors
       _showErrorSnackBar(context, 'An unexpected error occurred.');
     }
   }
@@ -45,6 +63,7 @@ class SingInPageState extends State<SignInPage> {
       SnackBar(
         content: Text(errorMessage),
         duration: Duration(seconds: 3),
+        backgroundColor: Colors.red,
       ),
     );
   }
@@ -74,20 +93,94 @@ class SingInPageState extends State<SignInPage> {
                 SizedBox(
                   height: 30,
                 ),
-                reusableTextField("Enter Username", Icons.person_outline, false,
-                    _emailTextController),
+                // Customized style for username TextField
+                TextField(
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: "Enter Username",
+                    prefixIcon: Icon(Icons.person_outline),
+                    fillColor: Colors.black.withOpacity(0.3),
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color.fromARGB(255, 247, 223, 2),
+                      ),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color.fromARGB(255, 247, 223, 2),
+                      ),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  controller: _emailTextController,
+                ),
                 SizedBox(
                   height: 30,
                 ),
-                reusableTextField("Enter Password", Icons.lock_outline, true,
-                    _passwordTextController),
+                // Customized style for password TextField
+                TextField(
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: "Enter Password",
+                    fillColor: Colors.black.withOpacity(0.3),
+                    filled: true,
+                    prefixIcon: Icon(Icons.lock_outline),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color.fromARGB(255, 247, 223, 2),
+                      ),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color.fromARGB(255, 247, 223, 2),
+                      ),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  obscureText: !_isPasswordVisible,
+                  controller: _passwordTextController,
+                ),
                 SizedBox(
                   height: 20,
                 ),
-                SignInSignUpButton(
-                  context,
-                  true,
-                  () => _signIn(context),
+                // Background color for the Sign In button
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: ElevatedButton(
+                    onPressed: () => _signIn(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromARGB(
+                          255, 247, 223, 2), // Adjust color as needed
+                    ),
+                    child: Text(
+                      "Sign In",
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
                 ),
                 SignUpOption(),
               ],

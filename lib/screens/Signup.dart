@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields, prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_final_fields
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,6 +22,9 @@ class SignUpPageState extends State<SignUpPage> {
 
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -57,27 +60,169 @@ class SignUpPageState extends State<SignUpPage> {
                 const SizedBox(
                   height: 15,
                 ),
-                reusableTextField("UserName", Icons.person_outline, false,
-                    _userNameTextController),
+                // TextField for UserName
+                TextField(
+                  controller: _userNameTextController,
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: "UserName",
+                    prefixIcon: Icon(Icons.person_outline),
+                    filled: true,
+                    fillColor: Colors.black.withOpacity(0.3),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color.fromARGB(255, 247, 223, 2),
+                      ),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color.fromARGB(255, 247, 223, 2),
+                      ),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                ),
                 const SizedBox(
                   height: 15,
                 ),
-                reusableTextField(
-                    "Email", Icons.person_outline, false, _emailTextController),
+                // TextField for Email
+                TextField(
+                  controller: _emailTextController,
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: "Email",
+                    prefixIcon: Icon(Icons.email_outlined),
+                    filled: true,
+                    fillColor: Colors.black.withOpacity(0.3),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color.fromARGB(255, 247, 223, 2),
+                      ),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color.fromARGB(255, 247, 223, 2),
+                      ),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                ),
                 const SizedBox(
                   height: 15,
                 ),
-                reusableTextField("New Password", Icons.lock_outline, true,
-                    _passwordTextController),
+                // TextField for New Password
+                TextField(
+                  controller: _passwordTextController,
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: "New Password",
+                    filled: true,
+                    fillColor: Colors.black.withOpacity(0.3),
+                    prefixIcon: Icon(Icons.lock_outline),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color.fromARGB(255, 247, 223, 2),
+                      ),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color.fromARGB(255, 247, 223, 2),
+                      ),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  obscureText: !_isPasswordVisible,
+                ),
                 const SizedBox(
                   height: 15,
                 ),
-                reusableTextField("Confirm Password", Icons.lock_outline, true,
-                    _confirmPasswordTextController),
+                // TextField for Confirm Password
+                TextField(
+                  controller: _confirmPasswordTextController,
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: "Confirm Password",
+                    filled: true,
+                    fillColor: Colors.black.withOpacity(0.3),
+                    prefixIcon: Icon(Icons.lock_outline),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isConfirmPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isConfirmPasswordVisible =
+                              !_isConfirmPasswordVisible;
+                        });
+                      },
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color.fromARGB(255, 247, 223, 2),
+                      ),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color.fromARGB(255, 247, 223, 2),
+                      ),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  obscureText: !_isConfirmPasswordVisible,
+                ),
                 const SizedBox(
                   height: 15,
                 ),
-                SignInSignUpButton(context, false, _signUp),
+                // TextButton for Sign Up
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: TextButton(
+                    onPressed: () => _signUp(),
+                    style: TextButton.styleFrom(
+                      backgroundColor:
+                          Color.fromARGB(255, 247, 223, 2), // Change to red
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                    child: Text(
+                      "Sign Up",
+                      style: TextStyle(
+                        color: Colors.black, // Adjust color as needed
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
               ],
             ),
           ),
@@ -94,6 +239,7 @@ class SignUpPageState extends State<SignUpPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Please fill in all fields.'),
+          backgroundColor: Colors.red, // Change to red
         ),
       );
       return;
@@ -103,6 +249,7 @@ class SignUpPageState extends State<SignUpPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Passwords do not match.'),
+          backgroundColor: Colors.red, // Change to red
         ),
       );
       return;
@@ -131,6 +278,7 @@ class SignUpPageState extends State<SignUpPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: $e'),
+          backgroundColor: Colors.red, // Change to red
         ),
       );
     }
