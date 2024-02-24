@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uokleo/HomePage.dart';
 import 'package:uokleo/resuable_widgets/reusable_widgets.dart';
 import 'Signup.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -55,6 +56,31 @@ class SingInPageState extends State<SignInPage> {
     } catch (e) {
       // Handle other unexpected errors
       _showErrorSnackBar(context, 'An unexpected error occurred.');
+    }
+  }
+
+  Future<void> _googleSignIn() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) return;
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    } catch (e) {
+      _showErrorSnackBar(context, 'Google Sign-In error: $e');
     }
   }
 
@@ -176,6 +202,39 @@ class SingInPageState extends State<SignInPage> {
                       style: TextStyle(
                         color: Colors.black,
                       ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("or"),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: ElevatedButton(
+                    onPressed: _googleSignIn,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white, // Adjust color as needed
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/images/google.png', // Replace with your actual asset path
+                          height: 24, // Adjust the height as needed
+                          width: 24, // Adjust the width as needed
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          "Sign In with Google",
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
