@@ -1,5 +1,6 @@
 // ignore_for_file: unused_local_variable, prefer_const_constructors
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uokleo/HomePage.dart';
@@ -18,6 +19,8 @@ class SingInPageState extends State<SignInPage> {
   TextEditingController _passwordTextController = TextEditingController();
   TextEditingController _emailTextController = TextEditingController();
   bool _isPasswordVisible = false;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   Future<void> _signIn(BuildContext context) async {
     try {
@@ -59,9 +62,12 @@ class SingInPageState extends State<SignInPage> {
     }
   }
 
-  Future<void> _googleSignIn() async {
+  Future<void> _googleLogIn(BuildContext context) async {
     try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      // Sign out from any existing Google account
+      await _googleSignIn.signOut();
+
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) return;
 
       final GoogleSignInAuthentication googleAuth =
@@ -72,15 +78,64 @@ class SingInPageState extends State<SignInPage> {
         idToken: googleAuth.idToken,
       );
 
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithCredential(credential);
+      // Check if the user with this Google email already exists
+      User? existingUser = await _auth
+          .fetchSignInMethodsForEmail(googleUser.email)
+          .then((methods) {
+        if (methods.isNotEmpty) {
+          // User already exists, don't sign in
+          return _auth.currentUser;
+        } else {
+          // User doesn't exist, proceed with sign in
+          return null;
+        }
+      });
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
+      if (existingUser == null) {
+        // User doesn't exist, create a new account
+        UserCredential userCredential =
+            await _auth.signInWithCredential(credential);
+
+        // Save user data to Firestore
+        await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(userCredential.user!.uid)
+            .set({
+          'userId': userCredential.user!.uid,
+          'username': userCredential.user!.displayName ?? '',
+          'email': userCredential.user!.email ?? '',
+          // Add more fields as needed
+          'googleSignIn': true,
+          // Additional fields specific to Google sign-in
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Google Sign In successful!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      } else {
+        // User already exists, show a message or handle accordingly
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('This email is already associated with an account.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     } catch (e) {
-      _showErrorSnackBar(context, 'Google Sign-In error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Google Sign In error: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -215,7 +270,7 @@ class SingInPageState extends State<SignInPage> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: ElevatedButton(
-                    onPressed: _googleSignIn,
+                    onPressed: () => _googleLogIn(context),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white, // Adjust color as needed
                     ),
@@ -229,7 +284,7 @@ class SingInPageState extends State<SignInPage> {
                         ),
                         SizedBox(width: 10),
                         Text(
-                          "Sign In with Google",
+                          "Continue with Google",
                           style: TextStyle(
                             color: Colors.black,
                           ),

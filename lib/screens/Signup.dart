@@ -332,9 +332,7 @@ class SignUpPageState extends State<SignUpPage> {
 
   Future<void> _googleSignUp() async {
     try {
-      // Sign out from any existing Google account
       await _googleSignIn.signOut();
-
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) return;
 
@@ -349,15 +347,21 @@ class SignUpPageState extends State<SignUpPage> {
       UserCredential userCredential =
           await _auth.signInWithCredential(credential);
 
-      // Save user data to Firestore
-      await _firestore.collection('Users').doc(userCredential.user!.uid).set({
-        'userId': userCredential.user!.uid,
-        'username': userCredential.user!.displayName ?? '',
-        'email': userCredential.user!.email ?? '',
-        // Add more fields as needed
-        'googleSignIn': true,
-        // Additional fields specific to Google sign-in
-      });
+      // Check if the user already exists in Firestore
+      DocumentSnapshot userDoc = await _firestore
+          .collection('Users')
+          .doc(userCredential.user!.uid)
+          .get();
+
+      if (!userDoc.exists) {
+        // Save user data to Firestore only if the user doesn't exist
+        await _firestore.collection('Users').doc(userCredential.user!.uid).set({
+          'userId': userCredential.user!.uid,
+          'username': userCredential.user!.displayName ?? '',
+          'email': userCredential.user!.email ?? '',
+          'googleSignIn': true,
+        });
+      }
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
