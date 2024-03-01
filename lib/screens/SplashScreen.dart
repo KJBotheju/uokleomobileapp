@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Authentication
 import 'package:uokleo/HomePage.dart';
 //import 'package:uokleo/screens/SignIn.dart';
 
@@ -22,11 +23,19 @@ class _SplashScreenState extends State<SplashScreen>
     );
     _animation = Tween<double>(begin: 0, end: 1).animate(_animationController!);
     _animationController!.forward();
-    Timer(Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
+    Timer(Duration(seconds: 3), () async {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      }
     });
   }
 
