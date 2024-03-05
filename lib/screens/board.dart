@@ -133,16 +133,55 @@ class _BoardPageState extends State<BoardPage> {
                     'assets/images/download.jpeg',
                   ),
                   _buildBoardMember(
-                    'Leo Yasasvi De Silva',
-                    '1st Vice President',
+                    'Leo Abhishek Dickwella',
+                    'Public Relations',
                     'assets/images/download.jpeg',
                   ),
                   _buildBoardMember(
-                    'Leo Abhishek Dickwella',
-                    'Vice President for Membership',
+                    'Leo Himashi Nimthara',
+                    'Public Relations',
                     'assets/images/download.jpeg',
                   ),
-                  // Add more members as needed
+                  _buildBoardMember(
+                    'Leo Chamuditha Gunawardene',
+                    'Information Technology',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Ashika Shameera',
+                    'Information Technology',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Yenuri Sandakulani',
+                    'Editorial Unit',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Dilshi Nethmini',
+                    'Editorial Unit',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Wasana Nandasena',
+                    'Marketing',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Krishan Fernando',
+                    'Marketings',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Thashmi Randunu',
+                    'Fundraising & External Relations and Events',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Chandupa Rathnayaka',
+                    'Fundraising & External Relations and Events',
+                    'assets/images/download.jpeg',
+                  ),
                 ],
               ),
             ),
@@ -156,26 +195,145 @@ class _BoardPageState extends State<BoardPage> {
                 scrollDirection: Axis.horizontal,
                 children: [
                   _buildBoardMember(
-                    'Leo Bawantha Wedagedara',
-                    'President',
+                    'Leo Azeeza Sheriffdeen',
+                    'Education & Literacy Avenue',
                     'assets/images/download.jpeg',
                   ),
                   _buildBoardMember(
-                    'Leo Sachith Lakshan',
-                    'Immediate Past President',
+                    'Leo Dilki Reshani',
+                    'Education & Literacy Avenue',
                     'assets/images/download.jpeg',
                   ),
                   _buildBoardMember(
-                    'Leo Yasasvi De Silva',
-                    '1st Vice President',
+                    'Leo Pasindi Umesha',
+                    'Environmental Conservation',
                     'assets/images/download.jpeg',
                   ),
                   _buildBoardMember(
-                    'Leo Abhishek Dickwella',
-                    'Vice President for Membership',
+                    'Leo Vishaka Jayathunga',
+                    'Environmental Conservation',
                     'assets/images/download.jpeg',
                   ),
-                  // Add more members as needed
+                  _buildBoardMember(
+                    'Leo Dhilmi Sharudya',
+                    'International Relations',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Lankeshi Wanninayaka',
+                    'International Relations',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Nadun Yashodana',
+                    'Sports & Recreation Avenue',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Dimithri Premarathne',
+                    'Sports & Recreation Avenue',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Nimesh Dananjaya',
+                    'Religion & Culture Avenue',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Ridmi Kavindya',
+                    'Religion & Culture Avenue',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Nethmi Hirunika',
+                    'Clean Water & Energy Conservation Avenue',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Thamod Rasmitha',
+                    'Clean Water & Energy Conservation Avenue',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Lihina dilshika',
+                    'Differently Abled Avenue',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo chamudi wellappuli',
+                    'Differently Abled Avenue',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Hashini Maheshika',
+                    'Youth Development',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Virochana Piyushana',
+                    'Youth Development',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Santhushi Gamage',
+                    'Sustainable Development',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Thisali Kariyawasam',
+                    'Sustainable Development',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Samadhi Ranawaka',
+                    'Child & Elder Care Avenue',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Yasindu Jayasinghe',
+                    'Child & Elder Care Avenue',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Ishara Sewwandi',
+                    'Poverty & Hunger Avenue',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Supun Dilshan',
+                    'Poverty & Hunger Avenue',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Sadeesha Dilhara',
+                    'Health Care Avenue',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Chamod Vishwa',
+                    'Health Care Avenue',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Supuni Kalhari',
+                    'Wildlife & Animal Conservation Avenue',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Tharindu Sumal',
+                    'Wildlife & Animal Conservation Avenue',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo Yasasi Dandeniya',
+                    'Women Empowerment Avenue',
+                    'assets/images/download.jpeg',
+                  ),
+                  _buildBoardMember(
+                    'Leo jaliya Godage Chathumi',
+                    'Women Empowerment Avenue',
+                    'assets/images/download.jpeg',
+                  ),
                 ],
               ),
             ),
