@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Authentication
 import 'package:uokleo/HomePage.dart';
-//import 'package:uokleo/screens/SignIn.dart';
+import 'package:uokleo/screens/SignIn.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen>
       } else {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => SignInPage()),
         );
       }
     });
