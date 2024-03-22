@@ -163,12 +163,12 @@ class _BoardPageState extends State<BoardPage> {
                 _buildBoardMember(
                   'Leo Krishan Fernando',
                   'Marketings',
-                  'assets/images/download.jpeg',
+                  'assets/board/krishan.png',
                 ),
                 _buildBoardMember(
                   'Leo Thashmi Randunu',
                   'Fundraising & External Relations and Events',
-                  'assets/images/download.jpeg',
+                  'assets/board/thashima.jpg',
                 ),
                 _buildBoardMember(
                   'Leo Chandupa Rathnayaka',
@@ -200,7 +200,7 @@ class _BoardPageState extends State<BoardPage> {
                 _buildBoardMember(
                   'Leo Vishaka Jayathunga',
                   'Environmental Conservation',
-                  'assets/images/download.jpeg',
+                  'assets/board/vishaka.jpg',
                 ),
                 _buildBoardMember(
                   'Leo Dhilmi Sharudya',
@@ -255,7 +255,7 @@ class _BoardPageState extends State<BoardPage> {
                 _buildBoardMember(
                   'Leo Hashini Maheshika',
                   'Youth Development',
-                  'assets/images/download.jpeg',
+                  'assets/board/hasini.jpeg',
                 ),
                 _buildBoardMember(
                   'Leo Virochana Piyushana',
@@ -280,7 +280,7 @@ class _BoardPageState extends State<BoardPage> {
                 _buildBoardMember(
                   'Leo Yasindu Jayasinghe',
                   'Child & Elder Care Avenue',
-                  'assets/images/download.jpeg',
+                  'assets/board/yasindu.jpeg',
                 ),
                 _buildBoardMember(
                   'Leo Ishara Sewwandi',
