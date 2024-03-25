@@ -154,7 +154,7 @@ class SingInPageState extends State<SignInPage> {
                 20, MediaQuery.of(context).size.height * 0.1, 20, 0),
             child: Column(
               children: <Widget>[
-                logoWidget("assets/images/download.jpeg"),
+                logoWidget("assets/images/logo.PNG"),
                 Text(
                   "LEO CLUB OF UNIVERSITY OF KELANIYA",
                   style: TextStyle(
