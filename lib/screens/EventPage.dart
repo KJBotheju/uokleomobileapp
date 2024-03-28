@@ -154,29 +154,35 @@ class _EventPageState extends State<EventPage> {
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Text(
-                      'No events for the selected day.',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'No events for the selected day.',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     );
                   } else {
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        Map<String, dynamic> event = snapshot.data![index];
-                        return ListTile(
-                          title: Text(
-                            'Project Name: ${event['projectName']}',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text(
-                            'Start Time: ${event['startTime']}',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        );
-                      },
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          Map<String, dynamic> event = snapshot.data![index];
+                          return ListTile(
+                            title: Text(
+                              'Project Name: ${event['projectName']}',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Text(
+                              'Start Time: ${event['startTime']}',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          );
+                        },
+                      ),
                     );
                   }
                 },
