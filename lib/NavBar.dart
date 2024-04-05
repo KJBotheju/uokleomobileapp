@@ -19,8 +19,8 @@ class _NavBarState extends State<NavBar> {
     BlogPage(),
     ProjectPage(),
     EventPage(),
-    AdminPage(),
     BoardPage(),
+    AdminPage(),
   ];
 
   @override
